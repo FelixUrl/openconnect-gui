@@ -347,7 +347,28 @@ Leave blank for default.</string>
        </item>
       </layout>
      </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="userAgentLabel">
+       <property name="text">
+        <string>User Agent</string>
+       </property>
+      </widget>
+     </item>
      <item row="12" column="1">
+      <widget class="QLineEdit" name="userAgentEdit">
+       <property name="toolTip">
+        <string>Override default User-Agent string.
+
+Some VPN servers require specific values matching proprietary VPN clients (e.g. --useragent=&quot;AnyConnect&quot;).
+
+Leave blank for default.</string>
+       </property>
+       <property name="placeholderText">
+        <string>(Optional) Override default User-Agent (e.g. AnyConnect)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
       <widget class="QComboBox" name="loglevelBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -388,7 +409,7 @@ Leave blank for default.</string>
        </item>
       </widget>
      </item>
-     <item row="12" column="0">
+     <item row="13" column="0">
       <widget class="QLabel" name="logLevelLabel">
        <property name="text">
         <string>Log Level</string>

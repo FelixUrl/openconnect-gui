@@ -249,6 +249,7 @@ int StoredServer::load(QString& name)
     m_interface_name.truncate(OC_IFNAME_MAX_LENGTH);
 #endif
     m_vpnc_script_filename = settings.value("vpnc-script").toString();
+    m_user_agent = settings.value("user-agent").toString();
 
     m_log_level = settings.value("log-level", -1).toInt();
 
@@ -297,6 +298,7 @@ int StoredServer::save()
 
     settings.setValue("interface-name", m_interface_name);
     settings.setValue("vpnc-script", m_vpnc_script_filename);
+    settings.setValue("user-agent", m_user_agent);
     if (m_log_level == -1)
         settings.remove("log-level");
     else
@@ -499,6 +501,16 @@ const QString& StoredServer::get_vpnc_script_filename() const
 void StoredServer::set_vpnc_script_filename(const QString& vpnc_script_filename)
 {
     this->m_vpnc_script_filename = vpnc_script_filename;
+}
+
+const QString& StoredServer::get_user_agent() const
+{
+    return this->m_user_agent;
+}
+
+void StoredServer::set_user_agent(const QString& user_agent)
+{
+    this->m_user_agent = sanitize_user_agent(user_agent);
 }
 
 int StoredServer::get_log_level()

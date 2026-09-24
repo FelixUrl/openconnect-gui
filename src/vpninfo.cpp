@@ -442,11 +442,25 @@ static inline int set_sock_block(int fd)
 
 VpnInfo::VpnInfo(QString name, StoredServer* ss, MainWindow* m)
 {
-    this->vpninfo = openconnect_vpninfo_new(name.toUtf8().data(), validate_peer_cert, nullptr,
+    QString userAgent = sanitize_user_agent(ss->get_user_agent());
+    const QString userAgentToPass = userAgent.isEmpty() ? name : userAgent;
+
+    this->vpninfo = openconnect_vpninfo_new(userAgentToPass.toUtf8().data(), validate_peer_cert, nullptr,
         process_auth_form, progress_vfn, this);
     if (this->vpninfo == nullptr) {
         throw std::runtime_error("initial setup fails");
     }
+
+#if OPENCONNECT_CHECK_VER(5, 8)
+    if (!userAgent.isEmpty()) {
+        int r = openconnect_set_useragent(this->vpninfo, userAgent.toUtf8().data());
+        if (r < 0) {
+            Logger::instance().addMessage(QObject::tr("Failed to set User-Agent: %1").arg(r));
+        } else {
+            Logger::instance().addMessage(QObject::tr("Custom User-Agent set to '%1'").arg(userAgent));
+        }
+    }
+#endif
 
     //get loglevel preference from profile
     int loglevel = ss->get_log_level();
@@ -550,6 +564,13 @@ int VpnInfo::connect()
 #error Define OS string of other platforms...
 #endif
     openconnect_set_reported_os(vpninfo, osName.toStdString().c_str());
+
+#if OPENCONNECT_CHECK_VER(5, 8)
+    QString userAgent = sanitize_user_agent(ss->get_user_agent());
+    if (!userAgent.isEmpty()) {
+        openconnect_set_useragent(vpninfo, userAgent.toUtf8().data());
+    }
+#endif
 
     ret = openconnect_obtain_cookie(vpninfo);
     if (ret != 0) {

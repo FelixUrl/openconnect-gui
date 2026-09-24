@@ -83,3 +83,20 @@ inline bool is_url(const QString& str)
     }
     return false;
 }
+
+inline QString sanitize_user_agent(QString ua)
+{
+    ua = ua.trimmed();
+    if (ua.startsWith(QLatin1String("--useragent="), Qt::CaseInsensitive)) {
+        ua = ua.mid(12).trimmed();
+    } else if (ua.startsWith(QLatin1String("--useragent "), Qt::CaseInsensitive)) {
+        ua = ua.mid(12).trimmed();
+    } else if (ua.startsWith(QLatin1String("-u "), Qt::CaseInsensitive)) {
+        ua = ua.mid(3).trimmed();
+    }
+    if ((ua.startsWith(QLatin1Char('"')) && ua.endsWith(QLatin1Char('"')) && ua.length() >= 2) ||
+        (ua.startsWith(QLatin1Char('\'')) && ua.endsWith(QLatin1Char('\'')) && ua.length() >= 2)) {
+        ua = ua.mid(1, ua.length() - 2).trimmed();
+    }
+    return ua;
+}

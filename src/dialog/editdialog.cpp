@@ -185,6 +185,7 @@ EditDialog::EditDialog(QString server, QWidget* parent)
     ui->protocolComboBox->setCurrentIndex(model->findIndex(ss->get_protocol_name()));
     ui->interfaceNameEdit->setText(ss->get_interface_name());
     ui->vpncScriptEdit->setText(ss->get_vpnc_script_filename());
+    ui->userAgentEdit->setText(ss->get_user_agent());
 
     type = loglevel_tab(ss->get_log_level());
     if (type != -1) {
@@ -288,6 +289,7 @@ void EditDialog::on_buttonBox_accepted()
     ss->set_protocol_name(ui->protocolComboBox->currentData(ROLE_PROTOCOL_NAME).toString());
     ss->set_interface_name(ui->interfaceNameEdit->text());
     ss->set_vpnc_script_filename(ui->vpncScriptEdit->text());
+    ss->set_user_agent(ui->userAgentEdit->text());
 
     type = ui->loglevelBox->currentIndex();
     if (type == -1) {
